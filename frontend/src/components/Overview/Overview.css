@@ -1,0 +1,30 @@
+/* src/components/Overview/Overview.css */
+
+.overview-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+  
+  .left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .left-column {
+    flex: 1;
+    margin-right: 2rem; /* Adds some space between the columns */
+  }
+  
+  .right-column {
+    flex: 2;
+  }
+  
+  .goals, .visualizer, .calendar {
+    border: 1px solid #ddd;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+  
+  /* Add or adjust styles as needed */
+  

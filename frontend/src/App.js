@@ -5,9 +5,11 @@ import Register from './components/Register/Register';
 import Overview from './components/Overview/Overview';
 import Panel from './components/Panel/Panel';
 import Navbar from './components/Navbar/Navbar';
+import { UserProvider } from './context/UserContext';
 
 const App = () => {
   return (
+  <UserProvider>
     <Router>
       <div className="App">
         <header className="App-header">
@@ -21,6 +23,7 @@ const App = () => {
         </Routes>
       </div>
     </Router>
+  </UserProvider>
   );
 };
 
