@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -26,6 +28,7 @@ const Register = () => {
       // Handle the response from the server
       if (response.status === 201) {
         alert('Registration successful!');
+        navigate('/');
         // Redirect the user to login page or home page after registration
         // window.location = '/login'; // Un-comment this line to enable redirection
       }
