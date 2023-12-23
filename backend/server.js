@@ -10,6 +10,16 @@ const port = process.env.PORT || 4000; // Use the port from the environment vari
 
 app.use(cors()); 
 
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 // 24 hours
+    }
+}));
 
 // PostgreSQL pool configuration
 const pool = new Pool({
@@ -20,16 +30,6 @@ const pool = new Pool({
   port: process.env.PGPORT,
 });
 
-// Express session configuration
-app.use(session({
-  secret: process.env.SESSION_SECRET, // The secret key from your .env file
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production', // Set to true if using HTTPS, required in production
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
-}));
 
 app.use(express.json()); // Middleware for parsing JSON
 
@@ -79,6 +79,7 @@ app.post('/login', async (req, res) => {
       if (validPassword) {
         // Set user session
         req.session.userId = user.rows[0].user_id;
+        req.session.userEmail = user.rows[0].email;
         res.send('Logged in successfully');
       } else {
         res.status(401).send('Invalid password');
