@@ -1,0 +1,60 @@
+/* src/components/Panel/Panel.css */
+
+.panel-page {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .panel-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    width: 100%; /* Use 100% width to fill the content area */
+  }
+  
+  .panel-container {
+    max-width: 800px; /* Or your desired max width */
+    padding: 20px;
+    margin-left: 20px; /* Add left margin to create space from the left border */
+    background-color: #f5f5f5;
+  }
+  
+  .goal-entry {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center; /* Align items vertically */
+    width: 100%; /* Full width to align buttons properly */
+  }
+  
+  .goal-input {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    flex-grow: 1;
+  }
+  
+  .remove-button,
+  .add-button,
+  .save-button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .remove-button:hover,
+  .add-button:hover,
+  .save-button:hover {
+    background-color: #45a049;
+  }
+  
+  .panel-actions {
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  /* Add further styles as needed */
+  
