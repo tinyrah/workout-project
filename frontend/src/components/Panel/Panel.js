@@ -1,6 +1,4 @@
-// src/components/Panel/Panel.js
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUser } from '../../context/UserContext';
 import Header from '../Header/Header';
@@ -9,7 +7,20 @@ import './Panel.css';
 
 const Panel = () => {
   const { user } = useUser();
-  const [goals, setGoals] = useState([{ name: '', target: '' }]);
+  const [goals, setGoals] = useState([]);
+
+  useEffect(() => {
+    const fetchGoals = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/goals/${user.id}`);
+        setGoals(response.data);
+      } catch (error) {
+        console.error('Error fetching goals:', error);
+      }
+    };
+
+    fetchGoals();
+  }, [user.id]);
 
   const handleGoalChange = (index, field, value) => {
     const newGoals = [...goals];
@@ -22,15 +33,21 @@ const Panel = () => {
   };
 
   const removeGoal = (index) => {
-    const newGoals = [...goals];
-    newGoals.splice(index, 1);
+    const newGoals = goals.filter((_, i) => i !== index);
     setGoals(newGoals);
   };
 
+  console.log('Current user in context:', user);
+
   const saveGoals = async () => {
     try {
-      const response = await axios.post('/goals', { userId: user.id, goals });
+      console.log('Saving goals:', { userId: user.id, goals: goals }); // Log the data being sent
+      const response = await axios.post('http://localhost:4000/goals', {
+        userId: user.userId,
+        goals: goals.filter(goal => goal.name && goal.target)
+      });
       console.log(response.data);
+      setGoals([{ name: '', target: '' }]); // Reset goals after saving
     } catch (error) {
       console.error('Error saving goals:', error);
     }

@@ -22,7 +22,7 @@ const Login = () => {
       // If the login was successful
       if (response.data) {
         // Use the login function from your UserContext
-        login({ email }); // You may want to include other data
+        login(response.data); // You may want to include other data
         navigate('/overview'); // Redirect to the overview page after login
       }
     } catch (error) {
