@@ -4,26 +4,37 @@ import Login from './components/Login/Login';
 import Register from './components/Register/Register';
 import Overview from './components/Overview/Overview';
 import Panel from './components/Panel/Panel';
-import Navbar from './components/Navbar/Navbar';
-import { UserProvider } from './context/UserContext';
+import { UserProvider, useUser } from './context/UserContext';
+
+const AppContent = () => {
+  const { loading } = useUser(); // Now this is within the UserProvider context
+
+  if (loading) {
+    return <div>Loading...</div>; // Display loading indicator while loading
+  }
+
+  return (
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/overview" element={<Overview />} />
+      <Route path="/panel" element={<Panel />} />
+    </Routes>
+  );
+};
 
 const App = () => {
   return (
-  <UserProvider>
-    <Router>
-      <div className="App">
-        <header className="App-header">
-          Workout Planner
-        </header>
-        <Routes>
-          <Route path="/" element={<Login onLogin={() => { /* handle login */ }} />} />
-          <Route path="/register" element={<Register onRegister={() => { /* handle registration */ }} />} />
-          <Route path="/overview" element={<Overview />} />
-          <Route path="/panel" element={<Panel />} />
-        </Routes>
-      </div>
-    </Router>
-  </UserProvider>
+    <UserProvider>
+      <Router>
+        <div className="App">
+          <header className="App-header">
+            Workout Planner
+          </header>
+          <AppContent />
+        </div>
+      </Router>
+    </UserProvider>
   );
 };
 

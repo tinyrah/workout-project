@@ -3,6 +3,7 @@ const express = require('express');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
 
 const app = express();
@@ -13,17 +14,7 @@ app.use(cors({
   credentials: true, // Allow cookies to be sent
 }));
 
-// Handles user sessions
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24
-    }
-}));
+
 
 // Connect to PostgreSQL database, its our connection pool
 const pool = new Pool({
@@ -33,6 +24,22 @@ const pool = new Pool({
   password: process.env.PGPASSWORD,
   port: process.env.PGPORT,
 });
+
+// Handles user sessions
+app.use(session({
+  store: new pgSession({
+    pool: pool, // Use the existing pool
+    tableName: 'session' // Use the name of the table you wish to store sessions in
+  }),
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 // 24 hours
+  }
+}));
 
 // tells express to parse json
 app.use(express.json());
@@ -139,15 +146,19 @@ app.post('/goals', isAuthenticated, async (req, res) => {
   2. Returns goals if successful
 */
 app.get('/goals', isAuthenticated, async (req, res) => {
-  const userId = req.session.userId; // Use userId from session
+  console.log('Session data:', req.session); // This will output the session data
+
+  const userId = req.session.userId;
   try {
     const userGoals = await pool.query('SELECT * FROM goals WHERE user_id = $1', [userId]);
+    console.log('Fetched goals:', userGoals.rows); // This will output the goals fetched from the database
     res.json(userGoals.rows);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
 });
+
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
